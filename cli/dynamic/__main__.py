@@ -1,6 +1,7 @@
-from .cli import generate_parser
+from . import cli, io, render
 
 import sys
+from os.path import abspath
 
 
 HELP = """
@@ -13,13 +14,20 @@ def main():
         print(HELP)
         exit(1)
 
-    init_arg = sys.argv[1]
+    root_template = sys.argv[1]
     template_args = sys.argv[2:]
 
-    with open(init_arg, "r") as f:
-        parser = generate_parser(f)
+    handler = io.stream(root_template)
+    parser = cli.generate_parser(handler)
+    args = parser.parse_args(template_args)
 
-    parser.parse_args(template_args)
+    var_map = {
+        var_name: abspath(var_path)
+        for var_name, var_path in args.__dict__.items()
+    }
+
+    output = render.render(root_template, var_map)
+    sys.stdout.write("".join(list(output)))
 
 
 if __name__ == "__main__":
