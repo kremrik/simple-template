@@ -1,0 +1,7 @@
+---
+templates/base.html:
+  dependencies:
+    body: templates/body.html
+    head: templates.head.html
+  output:
+    static/base.html
