@@ -14,10 +14,11 @@ def generate_parser(handler: Generator) -> argparse.ArgumentParser:
     for line in variables_raw:
         var = template.get_var_name(line)
         comment = template.get_var_comment(line)
-        print("#######", line, comment)
         variables.append((var, comment))
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     for var, comment in variables:
         arg = f"--{var}"
         hlp = comment or _default_help(var)
