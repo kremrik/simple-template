@@ -1,0 +1,14 @@
+{
+    "template": "templates/base.html",
+    "dependencies": [
+        {
+            "variable": "head",
+            "template": "templates/head.html"
+        },
+        {
+            "variable": "body",
+            "template": "templates/body.html"
+        }
+    ],
+    "output": "static/base.html"
+}
