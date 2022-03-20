@@ -81,3 +81,9 @@ class test_get_var_comment(unittest.TestCase):
         expect = "COMMENT"
         actual = template.get_var_comment(line)
         self.assertEqual(expect, actual)
+
+    def test_with_complex_comment(self):
+        line = "{{ variable /* /path/to/head.html template */ }}"
+        expect = "/path/to/head.html template"
+        actual = template.get_var_comment(line)
+        self.assertEqual(expect, actual)

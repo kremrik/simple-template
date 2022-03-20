@@ -12,16 +12,18 @@ def generate_parser(handler: Generator) -> argparse.ArgumentParser:
 
     variables = []
     for line in variables_raw:
-        v = template.get_var_name(line)
-        variables.append(v)
+        var = template.get_var_name(line)
+        comment = template.get_var_comment(line)
+        print("#######", line, comment)
+        variables.append((var, comment))
 
     parser = argparse.ArgumentParser()
-    for v in variables:
-        arg = f"--{v}"
-        hlp = _make_var_help(v)
+    for var, comment in variables:
+        arg = f"--{var}"
+        hlp = comment or _default_help(var)
         parser.add_argument(arg, help=hlp)
     return parser
 
 
-def _make_var_help(variable: str) -> str:
+def _default_help(variable: str) -> str:
     return f"path to {variable}.html template file"

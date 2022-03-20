@@ -3,7 +3,7 @@ from typing import Optional
 
 
 VAR_NAME = re.compile("{{[\s]([A-Za-z0-9]*).*}}")
-VAR_COMMENT = re.compile(r"{{.*/\*([A-Za-z0-9 ]*)\*/[\s]}}")
+VAR_COMMENT = re.compile(r"{{.*/\*([A-Za-z0-9/. ]*)\*/[\s]}}")
 
 
 def line_is_var(line: str) -> bool:
