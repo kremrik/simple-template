@@ -1,7 +1,7 @@
 from . import template
 
 import argparse
-from typing import Generator
+from typing import Generator, List
 
 
 def generate_parser(handler: Generator) -> argparse.ArgumentParser:
@@ -24,6 +24,16 @@ def generate_parser(handler: Generator) -> argparse.ArgumentParser:
         hlp = comment or _default_help(var)
         parser.add_argument(arg, help=hlp)
     return parser
+
+
+def bundle_args(args: List[str]) -> dict:
+    # naive implementation, assumes there is a matching
+    # value for each param
+    kvs = [args[i:i+2] for i in range(0, len(args), 2)]
+
+    # also naive, requires param to have leading "--"
+    cleaned_kvs = [(k.replace("--", ""), v) for k, v in kvs]
+    return dict(cleaned_kvs)
 
 
 def _default_help(variable: str) -> str:

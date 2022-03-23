@@ -6,14 +6,7 @@ from os.path import abspath
 
 CMD_NAME = "__main__.py"
 HELP = f"""\
-usage: {CMD_NAME} [-h] [template] [template args]
-
-positional arguments:
-  template
-
-optional arguments:
-  -h, --help  show this help message and exit
-  [template args]  optional arguments related to specific template
+<<< help here >>>
 """.strip()
 
 
@@ -28,17 +21,16 @@ def main():
 
     root_template = sys.argv[1]
     template_args = sys.argv[2:]
+    if "-h" in template_args or "--help" in template_args:
+        handler = io.stream_disk(root_template)
+        parser = cli.generate_parser(handler)
+        args = parser.parse_args(template_args)
+        exit(0)
 
-    handler = io.stream(root_template)
-    parser = cli.generate_parser(handler)
-    args = parser.parse_args(template_args)
-
-    var_map = {
-        var_name: abspath(var_path)
-        for var_name, var_path in args.__dict__.items()
-    }
-
-    output = render.render(root_template, var_map)
+    args = sys.argv[1:]
+    var_map = cli.bundle_args(args)
+    input_stream = io.stream_stdin()
+    output = render.render(input_stream, var_map)
     sys.stdout.write("".join(list(output)))
 
 
