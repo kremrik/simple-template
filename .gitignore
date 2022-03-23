@@ -9,3 +9,4 @@ sphinx/build
 *.db
 tmp
 *.csv
+*/target/
