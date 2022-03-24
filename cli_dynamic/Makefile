@@ -6,12 +6,8 @@ BLUE := \e[34m
 GREEN := \e[32m
 
 #----------------------------------------------------------
-
-.PHONY: check
-check : unit-tests black-format flake8-lint success
-
-.PHONY: pre-commit
-pre-commit: unit-tests black-check flake8-lint success
+.PHONY: tests
+tests: unit-tests functional-tests
 
 .PHONY: unit-tests
 unit-tests :
@@ -25,7 +21,8 @@ functional-tests :
 	@echo
 	@echo -e '$(BLUE)functional-tests'
 	@echo -e        '----------------$(NO_COLOR)'
-	@bash tests/functional/tests.sh
+	@docker build -t htmlayout-d:dev . > /dev/null
+	@docker run htmlayout-d:dev
 
 .PHONY: type-check
 type-check :
