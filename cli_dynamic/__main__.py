@@ -1,7 +1,6 @@
 from .tool import cli, io, render
 
 import sys
-from os.path import abspath
 
 
 CMD_NAME = "__main__.py"
@@ -11,20 +10,16 @@ HELP = f"""\
 
 
 def main():
-    if len(sys.argv) == 1:
+    args = sys.argv[1:]
+
+    if len(args) == 0:
         print(HELP)
         exit(1)
 
-    if sys.argv[1] in ("-h", "--help"):
-        print(HELP)
-        exit(0)
-
-    root_template = sys.argv[1]
-    template_args = sys.argv[2:]
-    if "-h" in template_args or "--help" in template_args:
-        handler = io.stream_disk(root_template)
+    if "-h" in args or "--help" in args:
+        handler = io.stream_stdin()
         parser = cli.generate_parser(handler)
-        args = parser.parse_args(template_args)
+        args = parser.parse_args(args)
         exit(0)
 
     args = sys.argv[1:]
