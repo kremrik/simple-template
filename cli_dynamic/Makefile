@@ -25,7 +25,7 @@ functional-tests :
 	@echo
 	@echo -e '$(BLUE)functional-tests'
 	@echo -e        '----------------$(NO_COLOR)'
-	@python3 -m unittest tests/functional/test*.py -v
+	@bash tests/functional/tests.sh
 
 .PHONY: type-check
 type-check :
