@@ -5,21 +5,14 @@ pub fn line_is_var(line: &str) -> bool {
     return false
 }
 
-// --------------------------------------------------------
-enum StatePlaceholder {
-    Before,
-    AtBgn,
-    Within,
-    AtEnd,
-    After,
-}
+// pub fn get_var(line: &str) -> String {
+//     let mut variable = String::new();
+//     let mut state = StatePlaceholder::Before;
 
-pub fn get_var(line: &str) -> String {
-    let mut variable = String::new();
-    let mut state = StatePlaceholder::Before;
+//     line.
 
-    variable
-}
+//     variable
+// }
 
 
 // TESTS
