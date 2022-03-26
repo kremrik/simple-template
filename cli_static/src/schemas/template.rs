@@ -6,7 +6,7 @@ use serde::{Serialize, Deserialize};
 pub struct Template {
     template: String,
     dependencies: Option<Vec<Dependency>>,
-    output: String,
+    output: Option<String>,
 }
 
 #[derive(Debug)]
