@@ -45,9 +45,7 @@ fn render_help(
 }
 
 fn bold(text: &str) -> String {
-    // TODO: doesn't work yet
-    // format!("\033[1m{}\0331[0m", text)
-    text.to_string()
+    format!("\x1b[1m{}\x1b[0m", text)
 }
 
 fn fmt_params(params: &HelpData) -> String {
@@ -62,7 +60,7 @@ fn fmt_params(params: &HelpData) -> String {
 }
 
 fn fmt_param(name: &str, comment: &str) -> String {
-    format!("\t--{}\t{}", bold(name), comment)
+    format!("\t--{}\n\t\t{}", bold(name), comment)
 }
 
 
