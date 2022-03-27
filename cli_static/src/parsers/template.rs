@@ -1,3 +1,9 @@
+#[derive(Debug, PartialEq)]
+pub struct Variable {
+    pub name: String,
+    pub comment: String,
+}
+
 pub fn line_is_var(line: &str) -> bool {
     if line.contains("{{") && line.contains("}}") {
         return true
@@ -5,7 +11,7 @@ pub fn line_is_var(line: &str) -> bool {
     return false
 }
 
-pub fn get_var(line: &str) -> String {
+pub fn get_var(line: &str) -> Variable {
     let lloc = line.find("{").unwrap() + 1;
     let rloc = line.find("}").unwrap() - 1;
 
@@ -16,7 +22,13 @@ pub fn get_var(line: &str) -> String {
         }
     }
 
-    variable.trim().to_string()
+    variable = variable.trim().to_string();
+    let comment = format!("/path/to/{}", variable);
+
+    Variable {
+        name: variable,
+        comment: comment,
+    }
 }
 
 pub fn placeholder_indent(line: &str) -> usize {
@@ -35,7 +47,12 @@ pub fn placeholder_indent(line: &str) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use super::{line_is_var, get_var, placeholder_indent};
+    use super::{
+        Variable,
+        line_is_var,
+        get_var,
+        placeholder_indent
+    };
 
     #[test]
     fn lines_is_var_true() {
@@ -56,7 +73,10 @@ mod tests {
     #[test]
     fn get_var_no_comment() {
         let line = "<a href=\"{{ var }}\"</a>";
-        let expect = String::from("var");
+        let expect = Variable {
+            name: String::from("var"),
+            comment: String::from("/path/to/var")
+        };
         let actual = get_var(line);
         assert_eq!(expect, actual);
     }
