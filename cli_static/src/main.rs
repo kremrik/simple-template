@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use htmlayout::io::FileIterator;
 
 use std::fs::File;
@@ -27,5 +29,5 @@ fn main() {
         }
     }
 
-    println!("{}", var);
+    println!("[{}]", var.trim());
 }

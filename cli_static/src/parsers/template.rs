@@ -5,14 +5,29 @@ pub fn line_is_var(line: &str) -> bool {
     return false
 }
 
-// pub fn get_var(line: &str) -> String {
-//     let mut variable = String::new();
-//     let mut state = StatePlaceholder::Before;
+pub fn get_var(line: &str) -> String {
+    let lloc = line.find("{").unwrap() + 1;
+    let rloc = line.find("}").unwrap() - 1;
 
-//     line.
+    let mut variable = String::new();
+    for (idx, chr) in line.chars().enumerate() {
+        if idx > lloc && idx < rloc {
+            variable.push(chr)
+        }
+    }
 
-//     variable
-// }
+    variable.trim().to_string()
+}
+
+pub fn placeholder_indent(line: &str) -> usize {
+    let line_trimmed = line.trim();
+
+    if !line_trimmed.starts_with("{") {
+        return 0
+    }
+
+    line.len() - line_trimmed.len()
+}
 
 
 // TESTS
@@ -20,7 +35,7 @@ pub fn line_is_var(line: &str) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use super::{line_is_var, get_var};
+    use super::{line_is_var, get_var, placeholder_indent};
 
     #[test]
     fn lines_is_var_true() {
@@ -43,6 +58,30 @@ mod tests {
         let line = "<a href=\"{{ var }}\"</a>";
         let expect = String::from("var");
         let actual = get_var(line);
+        assert_eq!(expect, actual);
+    }
+
+    #[test]
+    fn placeholder_indent_inline() {
+        let line = "<a href=\"{{ var }}\"</a>";
+        let expect = 0;
+        let actual = placeholder_indent(line);
+        assert_eq!(expect, actual);
+    }
+
+    #[test]
+    fn placeholder_indent_newline_no_indent() {
+        let line = "{{ var }}";
+        let expect = 0;
+        let actual = placeholder_indent(line);
+        assert_eq!(expect, actual);
+    }
+
+    #[test]
+    fn placeholder_indent_newline_with_indent() {
+        let line = "  {{ var }}";
+        let expect = 2;
+        let actual = placeholder_indent(line);
         assert_eq!(expect, actual);
     }
 }
