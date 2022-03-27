@@ -3,8 +3,21 @@ use crate::parsers::template;
 use std::collections::HashMap;
 
 type HelpData = HashMap<String, String>;
+type CliArgs = HashMap<String, String>;
 
 
+pub fn get_cli_args(args: &Vec<&str>) -> CliArgs {
+    let mut cli_args = CliArgs::new();
+    cli_args.insert(
+        args[0].to_string().replace("--", ""),
+        args[1].to_string()
+    );
+
+    cli_args
+}
+
+
+// --------------------------------------------------------
 pub fn make_help(lines: impl Iterator<Item=String>) -> String {
     let params = get_params(lines);
     render_help("htmlayout", &params)
@@ -70,7 +83,8 @@ fn fmt_param(name: &str, comment: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::{
-        make_help,
+        get_cli_args,
+        get_params,
     };
     use std::collections::HashMap;
 
@@ -103,7 +117,7 @@ mod tests {
         let templ = "<html></html>";
         let lines = MockLines::new(templ);
         let expect: HashMap<String, String> = HashMap::new();
-        let actual = make_help(lines);
+        let actual = get_params(lines);
         assert_eq!(expect, actual);
     }
 
@@ -118,7 +132,7 @@ mod tests {
         let mut expect = HashMap::new();
         expect.insert(String::from("foo"), String::from("/path/to/foo"));
 
-        let actual = make_help(lines);
+        let actual = get_params(lines);
         assert_eq!(expect, actual);
     }
 
@@ -135,7 +149,25 @@ mod tests {
         expect.insert(String::from("foo"), String::from("/path/to/foo"));
         expect.insert(String::from("bar"), String::from("/path/to/bar"));
 
-        let actual = make_help(lines);
+        let actual = get_params(lines);
+        assert_eq!(expect, actual);
+    }
+
+    #[test]
+    fn get_cli_args_no_args() {
+        let args = vec![];
+        let expect = HashMap::new()
+        let actual = get_cli_args(&args);
+        assert_eq!(expect, actual);
+    }
+
+    #[test]
+    fn get_cli_args_one_arg() {
+        let args = vec!["--foo", "1"];
+        let expect = HashMap::from([
+            (String::from("foo"), String::from("1"))
+        ]);
+        let actual = get_cli_args(&args);
         assert_eq!(expect, actual);
     }
 }
