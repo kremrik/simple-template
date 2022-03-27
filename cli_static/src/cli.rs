@@ -2,10 +2,15 @@ use crate::parsers::template;
 
 use std::collections::HashMap;
 
+type HelpData = HashMap<String, String>;
 
-pub fn make_help(
-    lines: impl Iterator<Item=String>
-) -> HashMap<String, String> {
+
+pub fn make_help(lines: impl Iterator<Item=String>) -> String {
+    let params = get_params(lines);
+    render_help("htmlayout", &params)
+}
+
+fn get_params(lines: impl Iterator<Item=String>) -> HelpData {
     let mut params = HashMap::new();
 
     for line in lines {
@@ -16,6 +21,48 @@ pub fn make_help(
     }
 
     params
+}
+
+fn render_help(
+    name: &str,
+    parameters: &HelpData,
+) -> String {
+    let hname = bold("NAME");
+    let hsynopsis = bold("SYNOPSIS");
+    let hdescription = bold("DESCRIPTION");
+
+    let synopsis = format!("cat <template> | {} [OPTION]...", name);
+    let description = fmt_params(parameters);
+
+    format!("{}\n\t{}\n\n{}\n\t{}\n\n{}\n{}\n", 
+        hname,
+        name,
+        hsynopsis,
+        synopsis,
+        hdescription,
+        description,
+    )
+}
+
+fn bold(text: &str) -> String {
+    // TODO: doesn't work yet
+    // format!("\033[1m{}\0331[0m", text)
+    text.to_string()
+}
+
+fn fmt_params(params: &HelpData) -> String {
+    let mut args: Vec<String> = Vec::new();
+
+    for (name, comment) in params.iter() {
+        let h = fmt_param(name, comment);
+        args.push(h);
+    }
+
+    args.join("\n")
+}
+
+fn fmt_param(name: &str, comment: &str) -> String {
+    format!("\t--{}\t{}", bold(name), comment)
 }
 
 
