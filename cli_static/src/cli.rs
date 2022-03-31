@@ -6,10 +6,10 @@ type HelpData = HashMap<String, String>;
 type CliArgs = HashMap<String, String>;
 
 
-pub fn get_cli_args(args: &Vec<&str>) -> CliArgs {
+pub fn get_cli_args(args: &Vec<String>) -> CliArgs {
     let mut cli_args = CliArgs::new();
 
-    for i in (0..args.len()).step_by(2) {
+    for i in (1..args.len()).step_by(2) {
         cli_args.insert(
             args[i].to_string().replace("--", ""),
             args[i+1].to_string()
@@ -157,7 +157,7 @@ mod tests {
 
     #[test]
     fn get_cli_args_no_args() {
-        let args = vec![];
+        let args = vec![String::from("sourcename")];
         let expect = HashMap::new();
         let actual = get_cli_args(&args);
         assert_eq!(expect, actual);
@@ -165,7 +165,11 @@ mod tests {
 
     #[test]
     fn get_cli_args_one_arg() {
-        let args = vec!["--foo", "1"];
+        let args = vec![
+            String::from("sourcename"),
+            String::from("--foo"),
+            String::from("1")
+        ];
         let expect = HashMap::from([
             (String::from("foo"), String::from("1"))
         ]);
@@ -175,7 +179,13 @@ mod tests {
 
     #[test]
     fn get_cli_args_mult_args() {
-        let args = vec!["--foo", "1", "--bar", "2"];
+        let args = vec![
+            String::from("sourcename"),
+            String::from("--foo"),
+            String::from("1"),
+            String::from("--bar"),
+            String::from("2"),
+        ];
         let expect = HashMap::from([
             (String::from("foo"), String::from("1")),
             (String::from("bar"), String::from("2"))
