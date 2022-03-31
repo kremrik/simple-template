@@ -32,6 +32,11 @@ fn main() {
     for line in si {
         if template::line_is_var(&line) {
             let var = template::get_var(&line).name;
+            if !template_args.contains_key(&var) {
+                print!("{}", line);
+                continue
+            }
+
             let indent_size = template::placeholder_indent(&line);
             let indent = make_indent(indent_size);
             let path = template_args.get(&var).unwrap();
