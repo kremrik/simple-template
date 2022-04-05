@@ -20,17 +20,25 @@ pub fn get_cli_args(args: &Vec<String>) -> CliArgs {
 }
 
 
-pub fn make_help(lines: impl Iterator<Item=String>) -> String {
-    let params = get_params(lines);
+pub fn make_help(
+    lines: impl Iterator<Item=String>,
+    bgn_placeholder: &str,
+    end_placeholder: &str,
+) -> String {
+    let params = get_params(lines, bgn_placeholder, end_placeholder);
     render_help("htmlayout", &params)
 }
 
-fn get_params(lines: impl Iterator<Item=String>) -> HelpData {
+fn get_params(
+    lines: impl Iterator<Item=String>,
+    bgn_placeholder: &str,
+    end_placeholder: &str,
+) -> HelpData {
     let mut params = HashMap::new();
 
     for line in lines {
-        if template::line_is_var(&line) {
-            let var = template::get_var(&line);
+        if template::line_is_var(&line, bgn_placeholder, end_placeholder) {
+            let var = template::get_var(&line, bgn_placeholder, end_placeholder);
             params.insert(var.name, var.comment);
         }
     }
@@ -116,15 +124,19 @@ mod tests {
 
     #[test]
     fn make_help_no_placeholders() {
+        let bgn_placeholder = "{{";
+        let end_placeholder = "}}";
         let templ = "<html></html>";
         let lines = MockLines::new(templ);
         let expect: HashMap<String, String> = HashMap::new();
-        let actual = get_params(lines);
+        let actual = get_params(lines, bgn_placeholder, end_placeholder);
         assert_eq!(expect, actual);
     }
 
     #[test]
     fn make_help_one_placeholder() {
+        let bgn_placeholder = "{{";
+        let end_placeholder = "}}";
         let templ = r#"
         <html>
             {{ foo }}
@@ -134,12 +146,14 @@ mod tests {
         let mut expect = HashMap::new();
         expect.insert(String::from("foo"), String::from("/path/to/foo"));
 
-        let actual = get_params(lines);
+        let actual = get_params(lines, bgn_placeholder, end_placeholder);
         assert_eq!(expect, actual);
     }
 
     #[test]
     fn make_help_mult_placeholders() {
+        let bgn_placeholder = "{{";
+        let end_placeholder = "}}";
         let templ = r#"
         <html>
             {{ foo }}
@@ -151,7 +165,7 @@ mod tests {
         expect.insert(String::from("foo"), String::from("/path/to/foo"));
         expect.insert(String::from("bar"), String::from("/path/to/bar"));
 
-        let actual = get_params(lines);
+        let actual = get_params(lines, bgn_placeholder, end_placeholder);
         assert_eq!(expect, actual);
     }
 
