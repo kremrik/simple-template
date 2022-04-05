@@ -24,7 +24,7 @@ pub fn get_var(
     let end_adj = end_placeholder.len() - 1;
 
     let lloc = line.find(bgn_placeholder).unwrap() + bgn_adj;
-    let rloc = line.find("}").unwrap() - end_adj;
+    let rloc = line.find(end_placeholder).unwrap() - end_adj;
 
     let mut variable = String::new();
     for (idx, chr) in line.chars().enumerate() {
