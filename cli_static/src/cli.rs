@@ -24,9 +24,24 @@ pub fn get_cli_args(args: &Vec<String>) -> Args {
         );
     }
 
+    let mut bgn_placeholder = String::from("{{");
+    let mut end_placeholder = String::from("}}");
+    let bgn = String::from("bgn");
+    let end = String::from("end");
+
+    if cli_args.contains_key(&bgn) {
+        bgn_placeholder = cli_args.get(&bgn).unwrap().to_string();
+        cli_args.remove(&bgn).unwrap();
+    }
+
+    if cli_args.contains_key(&end) {
+        end_placeholder = cli_args.get(&end).unwrap().to_string();
+        cli_args.remove(&end).unwrap();
+    }
+
     Args {
-        bgn_placeholder: String::from("{{"),
-        end_placeholder: String::from("}}"),
+        bgn_placeholder: bgn_placeholder,
+        end_placeholder: end_placeholder,
         params: cli_args
     }
 }
@@ -230,6 +245,58 @@ mod tests {
         let expect = Args {
             bgn_placeholder: String::from("{{"),
             end_placeholder: String::from("}}"),
+            params: params,
+        };
+
+        let actual = get_cli_args(&args);
+        assert_eq!(expect, actual);
+    }
+
+    #[test]
+    fn get_cli_args_custom_placeholders() {
+        let args = vec![
+            String::from("sourcename"),
+            String::from("--bgn"),
+            String::from("<<"),
+            String::from("--end"),
+            String::from(">>"),
+            String::from("--foo"),
+            String::from("1"),
+            String::from("--bar"),
+            String::from("2"),
+        ];
+        let params = HashMap::from([
+            (String::from("foo"), String::from("1")),
+            (String::from("bar"), String::from("2"))
+        ]);
+        let expect = Args {
+            bgn_placeholder: String::from("<<"),
+            end_placeholder: String::from(">>"),
+            params: params,
+        };
+
+        let actual = get_cli_args(&args);
+        assert_eq!(expect, actual);
+    }
+
+    #[test]
+    fn get_cli_args_one_custom_placeholder() {
+        let args = vec![
+            String::from("sourcename"),
+            String::from("--end"),
+            String::from(">>"),
+            String::from("--foo"),
+            String::from("1"),
+            String::from("--bar"),
+            String::from("2"),
+        ];
+        let params = HashMap::from([
+            (String::from("foo"), String::from("1")),
+            (String::from("bar"), String::from("2"))
+        ]);
+        let expect = Args {
+            bgn_placeholder: String::from("{{"),
+            end_placeholder: String::from(">>"),
             params: params,
         };
 
