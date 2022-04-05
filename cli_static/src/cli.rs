@@ -17,6 +17,7 @@ pub struct Args {
 pub fn get_cli_args(args: &Vec<String>) -> Args {
     let mut cli_args = CliArgs::new();
 
+    // TODO: this can not longer expect even number of params
     for i in (1..args.len()).step_by(2) {
         cli_args.insert(
             args[i].to_string().replace("--", ""),
