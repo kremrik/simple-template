@@ -6,7 +6,15 @@ type HelpData = HashMap<String, String>;
 type CliArgs = HashMap<String, String>;
 
 
-pub fn get_cli_args(args: &Vec<String>) -> CliArgs {
+#[derive(Debug, PartialEq)]
+pub struct Args {
+    pub bgn_placeholder: String,
+    pub end_placeholder: String,
+    pub params: CliArgs,
+}
+
+
+pub fn get_cli_args(args: &Vec<String>) -> Args {
     let mut cli_args = CliArgs::new();
 
     for i in (1..args.len()).step_by(2) {
@@ -16,7 +24,11 @@ pub fn get_cli_args(args: &Vec<String>) -> CliArgs {
         );
     }
 
-    cli_args
+    Args {
+        bgn_placeholder: String::from("{{"),
+        end_placeholder: String::from("}}"),
+        params: cli_args
+    }
 }
 
 
@@ -93,6 +105,7 @@ fn fmt_param(name: &str, comment: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::{
+        Args,
         get_cli_args,
         get_params,
     };
@@ -172,7 +185,11 @@ mod tests {
     #[test]
     fn get_cli_args_no_args() {
         let args = vec![String::from("sourcename")];
-        let expect = HashMap::new();
+        let expect = Args {
+            bgn_placeholder: String::from("{{"),
+            end_placeholder: String::from("}}"),
+            params: HashMap::new()
+        };
         let actual = get_cli_args(&args);
         assert_eq!(expect, actual);
     }
@@ -184,9 +201,15 @@ mod tests {
             String::from("--foo"),
             String::from("1")
         ];
-        let expect = HashMap::from([
+        let params = HashMap::from([
             (String::from("foo"), String::from("1"))
         ]);
+        let expect = Args {
+            bgn_placeholder: String::from("{{"),
+            end_placeholder: String::from("}}"),
+            params: params,
+        };
+
         let actual = get_cli_args(&args);
         assert_eq!(expect, actual);
     }
@@ -200,10 +223,16 @@ mod tests {
             String::from("--bar"),
             String::from("2"),
         ];
-        let expect = HashMap::from([
+        let params = HashMap::from([
             (String::from("foo"), String::from("1")),
             (String::from("bar"), String::from("2"))
         ]);
+        let expect = Args {
+            bgn_placeholder: String::from("{{"),
+            end_placeholder: String::from("}}"),
+            params: params,
+        };
+
         let actual = get_cli_args(&args);
         assert_eq!(expect, actual);
     }
