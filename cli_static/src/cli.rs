@@ -1,4 +1,4 @@
-use crate::parsers::template;
+use crate::template;
 
 use std::collections::HashMap;
 

@@ -8,7 +8,7 @@ use htmlayout::io::{
     FileIterator,
     StdinIterator,
 };
-use htmlayout::parsers::template;
+use htmlayout::template;
 
 use std::{env};
 use std::fs::File;
