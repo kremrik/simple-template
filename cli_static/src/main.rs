@@ -1,9 +1,6 @@
 #![allow(dead_code)]
 
-use htmlayout::cli::{
-    make_help,
-    get_cli_args,
-};
+use htmlayout::cli;
 use htmlayout::io::{
     FileIterator,
     StdinIterator,
@@ -18,14 +15,14 @@ fn main() {
     let h = String::from("-h");
     let help = String::from("--help");
     let cli_params: Vec<String> = env::args().collect();
-    let template_args = get_cli_args(&cli_params);
+    let template_args = cli::get_cli_args(&cli_params);
 
     let bgn_placeholder = &template_args.bgn_placeholder;
     let end_placeholder = &template_args.end_placeholder;
     
     if cli_params.contains(&h) || cli_params.contains(&help) {
         let si = StdinIterator::new();
-        let help = make_help(si, bgn_placeholder, end_placeholder);
+        let help = cli::make_help(si, bgn_placeholder, end_placeholder);
         println!("{}", help);
         exit(0);
     }
