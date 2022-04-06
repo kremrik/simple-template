@@ -1,10 +1,7 @@
 #![allow(dead_code)]
 
 use htmlayout::cli;
-use htmlayout::io::{
-    FileIterator,
-    StdinIterator,
-};
+use htmlayout::io;
 use htmlayout::template;
 
 use std::{env};
@@ -21,13 +18,13 @@ fn main() {
     let end_placeholder = &template_args.end_placeholder;
     
     if cli_params.contains(&h) || cli_params.contains(&help) {
-        let si = StdinIterator::new();
+        let si = io::StdinIterator::new();
         let help = cli::make_help(si, bgn_placeholder, end_placeholder);
         println!("{}", help);
         exit(0);
     }
 
-    let si = StdinIterator::new();
+    let si = io::StdinIterator::new();
 
     for line in si {
         if template::line_is_var(&line, bgn_placeholder, end_placeholder) {
@@ -41,7 +38,7 @@ fn main() {
             let indent = make_indent(indent_size);
             let path = template_args.params.get(&var).unwrap();
             let handler = File::open(path).unwrap();
-            let fi = FileIterator::new(&handler);
+            let fi = io::FileIterator::new(&handler);
             for var_line in fi {
                 println!("{}{}", indent, var_line);
             }
