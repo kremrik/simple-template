@@ -69,7 +69,7 @@ mod tests {
     };
 
     #[test]
-    fn lines_is_var_true() {
+    fn line_is_var_true() {
         let bgn_placeholder = "{{";
         let end_placeholder = "}}";
         let line = "<a href=\"{{ var }}\"</a>";
@@ -79,7 +79,7 @@ mod tests {
     }
 
     #[test]
-    fn lines_is_var_false() {
+    fn line_is_var_false() {
         let bgn_placeholder = "{{";
         let end_placeholder = "}}";
         let line = "<a href=\"http://httpbin.com\"</a>";

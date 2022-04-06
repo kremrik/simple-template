@@ -118,11 +118,10 @@ fn fmt_param(name: &str, comment: &str) -> String {
 // TESTS
 // --------------------------------------------------------
 
+// these are here until i feel like testing the actual help output...
 #[cfg(test)]
 mod tests {
     use super::{
-        Args,
-        get_cli_args,
         get_params,
     };
     use std::collections::HashMap;
@@ -195,113 +194,6 @@ mod tests {
         expect.insert(String::from("bar"), String::from("/path/to/bar"));
 
         let actual = get_params(lines, bgn_placeholder, end_placeholder);
-        assert_eq!(expect, actual);
-    }
-
-    #[test]
-    fn get_cli_args_no_args() {
-        let args = vec![String::from("sourcename")];
-        let expect = Args {
-            bgn_placeholder: String::from("{{"),
-            end_placeholder: String::from("}}"),
-            params: HashMap::new()
-        };
-        let actual = get_cli_args(&args);
-        assert_eq!(expect, actual);
-    }
-
-    #[test]
-    fn get_cli_args_one_arg() {
-        let args = vec![
-            String::from("sourcename"),
-            String::from("--foo"),
-            String::from("1")
-        ];
-        let params = HashMap::from([
-            (String::from("foo"), String::from("1"))
-        ]);
-        let expect = Args {
-            bgn_placeholder: String::from("{{"),
-            end_placeholder: String::from("}}"),
-            params: params,
-        };
-
-        let actual = get_cli_args(&args);
-        assert_eq!(expect, actual);
-    }
-
-    #[test]
-    fn get_cli_args_mult_args() {
-        let args = vec![
-            String::from("sourcename"),
-            String::from("--foo"),
-            String::from("1"),
-            String::from("--bar"),
-            String::from("2"),
-        ];
-        let params = HashMap::from([
-            (String::from("foo"), String::from("1")),
-            (String::from("bar"), String::from("2"))
-        ]);
-        let expect = Args {
-            bgn_placeholder: String::from("{{"),
-            end_placeholder: String::from("}}"),
-            params: params,
-        };
-
-        let actual = get_cli_args(&args);
-        assert_eq!(expect, actual);
-    }
-
-    #[test]
-    fn get_cli_args_custom_placeholders() {
-        let args = vec![
-            String::from("sourcename"),
-            String::from("--bgn"),
-            String::from("<<"),
-            String::from("--end"),
-            String::from(">>"),
-            String::from("--foo"),
-            String::from("1"),
-            String::from("--bar"),
-            String::from("2"),
-        ];
-        let params = HashMap::from([
-            (String::from("foo"), String::from("1")),
-            (String::from("bar"), String::from("2"))
-        ]);
-        let expect = Args {
-            bgn_placeholder: String::from("<<"),
-            end_placeholder: String::from(">>"),
-            params: params,
-        };
-
-        let actual = get_cli_args(&args);
-        assert_eq!(expect, actual);
-    }
-
-    #[test]
-    fn get_cli_args_one_custom_placeholder() {
-        let args = vec![
-            String::from("sourcename"),
-            String::from("--end"),
-            String::from(">>"),
-            String::from("--foo"),
-            String::from("1"),
-            String::from("--bar"),
-            String::from("2"),
-        ];
-        let params = HashMap::from([
-            (String::from("foo"), String::from("1")),
-            (String::from("bar"), String::from("2"))
-        ]);
-        let expect = Args {
-            bgn_placeholder: String::from("{{"),
-            end_placeholder: String::from(">>"),
-            params: params,
-        };
-
-        let actual = get_cli_args(&args);
         assert_eq!(expect, actual);
     }
 }
