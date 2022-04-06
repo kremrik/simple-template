@@ -1,10 +1,12 @@
 #![allow(dead_code)]
 
-use htmlayout::cli;
-use htmlayout::io;
-use htmlayout::template;
+use htmlayout::{
+    cli,
+    io,
+    template,
+};
 
-use std::{env};
+use std::env;
 use std::fs::File;
 use std::process::exit;
 
