@@ -2,6 +2,7 @@
 
 use htmlayout::{
     cli,
+    constants,
     io,
     template,
 };
@@ -11,8 +12,8 @@ use std::fs::File;
 use std::process::exit;
 
 fn main() {
-    let h = String::from("-h");
-    let help = String::from("--help");
+    let h = constants::HELP_SHORT.to_string();
+    let help = constants::HELP_LONG.to_string();
     let cli_params: Vec<String> = env::args().collect();
     let template_args = cli::get_cli_args(&cli_params);
     

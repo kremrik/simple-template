@@ -109,3 +109,24 @@ fn get_cli_args_one_custom_placeholder() {
     let actual = cli::get_cli_args(&args);
     assert_eq!(expect, actual);
 }
+
+#[test]
+fn get_cli_args_uneven_num_params() {
+    let args = vec![
+        String::from("sourcename"),
+        String::from("--help"),
+        String::from("--bgn"),
+        String::from("{{"),
+        String::from("--end"),
+        String::from("}}"),
+    ];
+    let params = HashMap::new();
+    let expect = cli::Args {
+        bgn_placeholder: String::from("{{"),
+        end_placeholder: String::from("}}"),
+        params: params,
+    };
+
+    let actual = cli::get_cli_args(&args);
+    assert_eq!(expect, actual);
+}

@@ -1,4 +1,7 @@
-use crate::template;
+use crate::{
+    constants,
+    template,
+};
 
 use std::collections::HashMap;
 
@@ -16,13 +19,30 @@ pub struct Args {
 
 pub fn get_cli_args(args: &Vec<String>) -> Args {
     let mut cli_args = CliArgs::new();
+    let mut key: &str = "";
+    let mut val: &str = "";
+    
+    for i in 0..(args.len() - 1) {
+        if args[i] == constants::HELP_SHORT || args[i] == constants::HELP_LONG {
+            continue
+        }
 
-    // TODO: this can not longer expect even number of params
-    for i in (1..args.len()).step_by(2) {
-        cli_args.insert(
-            args[i].to_string().replace("--", ""),
-            args[i+1].to_string()
-        );
+        if args[i].starts_with("--") {
+            key = &args[i];
+        } else {
+            val = &args[i];
+        }
+
+        if !key.is_empty() && !val.is_empty() {
+            cli_args.insert(
+                args[i].to_string().replace("--", ""),
+                args[i+1].to_string()
+            );
+            key = "";
+            val = "";
+        } else {
+            continue
+        }
     }
 
     let mut bgn_placeholder = String::from("{{");
