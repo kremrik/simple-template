@@ -34,12 +34,16 @@ pub fn get_var(
     }
 
     variable = variable.trim().to_string();
-    let comment = format!("/path/to/{}", variable);
+    let comment = get_comment(&line, &variable);
 
     Variable {
         name: variable,
         comment: comment,
     }
+}
+
+fn get_comment(line: &str, variable: &str) -> String {
+    format!("/path/to/{}", variable)
 }
 
 pub fn placeholder_indent(
