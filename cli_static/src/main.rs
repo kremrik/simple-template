@@ -15,30 +15,40 @@ fn main() {
     let help = String::from("--help");
     let cli_params: Vec<String> = env::args().collect();
     let template_args = cli::get_cli_args(&cli_params);
-
-    let bgn_placeholder = &template_args.bgn_placeholder;
-    let end_placeholder = &template_args.end_placeholder;
     
     if cli_params.contains(&h) || cli_params.contains(&help) {
-        let si = io::StdinIterator::new();
-        let help = cli::make_help(si, bgn_placeholder, end_placeholder);
-        println!("{}", help);
+        run_help(&template_args);
+        exit(0);
+    } else {
+        run(&template_args);
         exit(0);
     }
+}
 
+fn run_help(args: &cli::Args) {
+    let bgn_placeholder = &args.bgn_placeholder;
+    let end_placeholder = &args.end_placeholder;
+    let si = io::StdinIterator::new();
+    let help = cli::make_help(si, &bgn_placeholder, &end_placeholder);
+    println!("{}", help);
+}
+
+fn run(args: &cli::Args) {
+    let bgn_placeholder = &args.bgn_placeholder;
+    let end_placeholder = &args.end_placeholder;
     let si = io::StdinIterator::new();
 
     for line in si {
-        if template::line_is_var(&line, bgn_placeholder, end_placeholder) {
-            let var = template::get_var(&line, bgn_placeholder, end_placeholder).name;
-            if !template_args.params.contains_key(&var) {
+        if template::line_is_var(&line, &bgn_placeholder, &end_placeholder) {
+            let var = template::get_var(&line, &bgn_placeholder, &end_placeholder).name;
+            if !args.params.contains_key(&var) {
                 print!("{}", line);
                 continue
             }
 
-            let indent_size = template::placeholder_indent(&line, bgn_placeholder);
+            let indent_size = template::placeholder_indent(&line, &bgn_placeholder);
             let indent = make_indent(indent_size);
-            let path = template_args.params.get(&var).unwrap();
+            let path = args.params.get(&var).unwrap();
             let handler = File::open(path).unwrap();
             let fi = io::FileIterator::new(&handler);
             for var_line in fi {
