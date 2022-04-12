@@ -1,4 +1,5 @@
 # Rust simple-template
+Getting comfortable with Rust by making a (terrible) CLI templating tool
 
 
 ### Installation via cargo
