@@ -74,7 +74,7 @@ pub fn make_help(
     end_placeholder: &str,
 ) -> String {
     let params = get_params(lines, bgn_placeholder, end_placeholder);
-    render_help("htmlayout", &params)
+    render_help("simpletemplate", &params)
 }
 
 fn get_params(

@@ -1,4 +1,4 @@
-use htmlayout::cli;
+use simpletemplate::cli;
 
 use std::collections::HashMap;
 

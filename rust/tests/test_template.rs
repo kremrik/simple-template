@@ -1,4 +1,4 @@
-use htmlayout::template;
+use simpletemplate::template;
 
 
 #[test]

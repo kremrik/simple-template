@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use htmlayout::{
+use simpletemplate::{
     cli,
     constants,
     io,
